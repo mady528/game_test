@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Star Sign & Personality Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .container {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #ff6347;
+    }
+    .question {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    select, input[type="radio"], input[type="range"], button, input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fafafa;
+    }
+    button {
+      background-color: #ff6347;
+      color: white;
+      cursor: pointer;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #ff4500;
+    }
+    .result {
+      display: none;
+      text-align: left;
+      margin-top: 20px;
+      background-color: #fdf7f3;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #f5c6a5;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    .result h2 {
+      font-size: 24px;
+      color: #ff6347;
+      margin-bottom: 10px;
+    }
+    .result p {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .result strong {
+      color: #222;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Personality & Star Sign Quiz</h1>
+    <form id="quizForm">
+      <div class="question">
+        <label for="color">What is your favorite color?</label>
+        <select id="color" name="color">
+          <option value="" disabled selected>Please select</option>
+          <option value="red">Red</option>
+          <option value="blue">Blue</option>
+          <option value="green">Green</option>
+          <option value="yellow">Yellow</option>
+          <option value="purple">Purple</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="food">What is your favorite food?</label>
+        <select id="food" name="food">
+          <option value="" disabled selected>Please select</option>
+          <option value="pizza">Pizza</option>
+          <option value="sushi">Sushi</option>
+          <option value="salad">Salad</option>
+          <option value="pasta">Pasta</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="dance">What’s your go-to dance move?</label>
+        <select id="dance" name="dance">
+          <option value="" disabled selected>Please select</option>
+          <option value="salsa">Salsa</option>
+          <option value="waltz">Waltz</option>
+          <option value="floss">Floss</option>
+          <option value="improvised">Improvised</option>
+        </select>
+      </div>
+      <div class="question">
+        <label for="adventure">How much do you enjoy adventure on a scale of 1-10?</label>
+        <input type="range" id="adventure" name="adventure" min="1" max="10">
+      </div>
+      <div class="question">
+        <label for="dob">What is your date of birth?</label>
+        <input type="date" id="dob" name="dob">
+      </div>
+      <button type="submit">Reveal Your Personality</button>
+    </form>
+
+    <div class="result" id="result">
+      <h2>Your Personality Results</h2>
+      <div id="resultText"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("quizForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const color = document.getElementById("color").value;
+      const food = document.getElementById("food").value;
+      const dance = document.getElementById("dance").value;
+      const adventure = document.getElementById("adventure").value;
+      const dob = document.getElementById("dob").value;
+
+      if (!dob) {
+        alert("Please select a date of birth.");
+        return;
+      }
+
+      // Send DOB to SheetDB
+      fetch("https://sheetdb.io/api/v1/h9hhtfe3oofib", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ data: [{ dob: dob }] })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("DOB sent to SheetDB:", data);
+      })
+      .catch(error => {
+        console.error("Error sending DOB to SheetDB:", error);
+      });
+
+      const birthDate = new Date(dob);
+      const month = birthDate.getMonth() + 1;
+      const day = birthDate.getDate();
+      const zodiac = getZodiacSign(month, day);
+
+      let resultText = "";
+
+      resultText += `<p><strong>🎨 Favorite Color:</strong> `;
+      switch (color) {
+        case "red":
+          resultText += `You’re vibrant and energetic—always full of passion and drive. You have an innate ability to take charge and inspire those around you, but be mindful of burnout. Don’t forget to rest when needed.</p>`;
+          break;
+        case "blue":
+          resultText += `You’re calm, introspective, and seek peace in your surroundings. You bring serenity to the lives of those around you, but don’t hesitate to speak up for your needs. You deserve to be heard too.</p>`;
+          break;
+        case "green":
+          resultText += `You’re grounded and compassionate, drawn to nature and harmony. You’re a natural caretaker, but make sure to also take time for yourself. Your well-being matters just as much as others’.</p>`;
+          break;
+        case "yellow":
+          resultText += `You’re joyful, curious, and light up any room. Your energy is contagious, and you inspire others to think outside the box. Just remember to stay grounded and focus on the things that bring you true happiness.</p>`;
+          break;
+        default:
+          resultText += `You’re imaginative and love to think outside the box. Embrace your creativity and explore new ideas, but remember to stay connected to your roots and people who care about you.</p>`;
+      }
+
+      resultText += `<p><strong>🍽 Favorite Food:</strong> Loving ${food} shows you enjoy life’s simple pleasures and know how to treat yourself. Keep nurturing yourself with those little joys—food for the body and the soul.</p>`;
+
+      resultText += `<p><strong>💃 Dance Style:</strong> `;
+      switch (dance) {
+        case "salsa":
+          resultText += `You’re confident and social—ready to light up the dance floor! Don’t forget to share your warmth with others, as it can help lift their spirits too. Stay confident, but remember everyone is unique.</p>`;
+          break;
+        case "waltz":
+          resultText += `You’re elegant and value tradition and grace. Your poise and ability to bring calmness to any situation is a gift. Don’t be afraid to take the lead in moments of uncertainty—you are capable of guiding yourself and others.</p>`;
+          break;
+        case "floss":
+          resultText += `You’re spontaneous and fun-loving—definitely the life of the party. Your enthusiasm is infectious, but try to balance your fun with some quiet moments for reflection, too. You deserve moments of stillness as well as movement.</p>`;
+          break;
+        default:
+          resultText += `You’re creative and free-spirited, dancing to your own rhythm. Embrace your individuality, but remember to keep an open mind to others’ perspectives. They may offer insights that help you grow.</p>`;
+      }
+
+      resultText += `<p><strong>🧭 Adventure Level:</strong> `;
+      if (adventure > 7) {
+        resultText += `You're a thrill-seeker who lives for new experiences! Your courage and excitement for life are admirable, but don't forget to check in with yourself to make sure you're not rushing through life too fast.</p>`;
+      } else if (adventure > 4) {
+        resultText += `You’re open to excitement but appreciate your comfort zone too. It’s perfectly okay to seek balance between the thrill of new adventures and the peace of familiar surroundings. Both are equally important for your happiness.</p>`;
+      } else {
+        resultText += `You prefer familiar ground and find comfort in consistency. There’s wisdom in your approach—you know what works best for you. Just be open to occasional change, as it can offer you new opportunities for growth.</p>`;
+      }
+
+      resultText += `<p><strong>🔮 Zodiac Sign:</strong> As a <strong>${zodiac}</strong>, you are `;
+      switch (zodiac) {
+        case "Aries":
+          resultText += `bold, energetic, and a natural leader...`;
+          break;
+        case "Taurus":
+          resultText += `reliable, grounded, and love life’s luxuries...`;
+          break;
+        case "Gemini":
+          resultText += `curious, sociable, and always learning...`;
+          break;
+        case "Cancer":
+          resultText += `deeply intuitive, protective, and emotional...`;
+          break;
+        case "Leo":
+          resultText += `radiant, confident, and born to lead...`;
+          break;
+        case "Virgo":
+          resultText += `analytical, practical, and always prepared...`;
+          break;
+        case "Libra":
+          resultText += `charming, fair, and values harmony...`;
+          break;
+        case "Scorpio":
+          resultText += `intense, loyal, and passionate...`;
+          break;
+        case "Sagittarius":
+          resultText += `adventurous, optimistic, and open-minded...`;
+          break;
+        case "Capricorn":
+          resultText += `ambitious, wise, and persistent...`;
+          break;
+        case "Aquarius":
+          resultText += `inventive, independent, and a visionary...`;
+          break;
+        default:
+          resultText += `compassionate, creative, and deeply emotional...`;
+      }
+
+      resultText += `</p><p><strong>✨ Final Words:</strong> Remember, no matter what your results are, you are unique and valuable just as you are...</p>`;
+
+      document.getElementById("resultText").innerHTML = resultText;
+      document.getElementById("result").style.display = "block";
+    });
+
+    function getZodiacSign(month, day) {
+      const zodiacSigns = [
+        { sign: "Capricorn", lastDay: 19 },
+        { sign: "Aquarius", lastDay: 18 },
+        { sign: "Pisces", lastDay: 20 },
+        { sign: "Aries", lastDay: 19 },
+        { sign: "Taurus", lastDay: 20 },
+        { sign: "Gemini", lastDay: 20 },
+        { sign: "Cancer", lastDay: 22 },
+        { sign: "Leo", lastDay: 22 },
+        { sign: "Virgo", lastDay: 22 },
+        { sign: "Libra", lastDay: 22 },
+        { sign: "Scorpio", lastDay: 21 },
+        { sign: "Sagittarius", lastDay: 21 },
+      ];
+      return zodiacSigns[month - 1].sign;
+    }
+  </script>
+</body>
+</html>
