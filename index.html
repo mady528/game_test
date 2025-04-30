@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Personality Quiz</title>
+  <title>Quiz de Personalidad</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -60,46 +60,46 @@
   </style>
 </head>
 <body>
-  <h1>🌟 Discover Your Inner Self 🌟</h1>
+  <h1>🌟 Descubre tu Yo Interior 🌟</h1>
   <form id="quizForm">
-    <label for="dob">Date of Birth:</label>
+    <label for="dob">Fecha de Nacimiento:</label>
     <input type="date" id="dob" name="dob" required />
 
-    <label for="color">Favorite Color:</label>
+    <label for="color">Color Favorito:</label>
     <select id="color" name="color" required>
-      <option value="">Select</option>
-      <option value="red">Red</option>
-      <option value="blue">Blue</option>
-      <option value="green">Green</option>
-      <option value="yellow">Yellow</option>
+      <option value="">Selecciona</option>
+      <option value="red">Rojo</option>
+      <option value="blue">Azul</option>
+      <option value="green">Verde</option>
+      <option value="yellow">Amarillo</option>
     </select>
 
-    <label for="food">Favorite Food:</label>
+    <label for="food">Comida Favorita:</label>
     <select id="food" name="food" required>
-      <option value="">Select</option>
+      <option value="">Selecciona</option>
       <option value="pizza">Pizza</option>
       <option value="sushi">Sushi</option>
-      <option value="salad">Salad</option>
+      <option value="salad">Ensalada</option>
       <option value="tacos">Tacos</option>
     </select>
 
-    <label for="dance">Pick a Dance Style:</label>
+    <label for="dance">Estilo de Baile:</label>
     <select id="dance" name="dance" required>
-      <option value="">Select</option>
+      <option value="">Selecciona</option>
       <option value="salsa">Salsa</option>
-      <option value="waltz">Waltz</option>
+      <option value="waltz">Vals</option>
       <option value="floss">Floss</option>
-      <option value="freestyle">Freestyle</option>
+      <option value="freestyle">Libre</option>
     </select>
 
-    <label for="adventure">Adventure Level (1–10):</label>
+    <label for="adventure">Nivel de Aventura (1–10):</label>
     <input type="number" id="adventure" name="adventure" min="1" max="10" required />
 
-    <button type="submit">Reveal Insights ✨</button>
+    <button type="submit">Revelar Perspectivas ✨</button>
   </form>
 
   <div id="result" style="display:none;">
-    <h2>Your Results</h2>
+    <h2>Tus Resultados</h2>
     <div id="resultText"></div>
   </div>
 
@@ -114,7 +114,7 @@
 
       const dobInput = document.getElementById("dob").value;
       if (!dobInput) {
-        alert("Please select a date of birth.");
+        alert("Por favor selecciona tu fecha de nacimiento.");
         return;
       }
 
@@ -130,10 +130,10 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log("DOB sent to SheetDB:", data);
+        console.log("DOB enviado a SheetDB:", data);
       })
       .catch(error => {
-        console.error("Error sending DOB to SheetDB:", error);
+        console.error("Error al enviar DOB:", error);
       });
 
       const month = dobDate.getMonth() + 1;
@@ -142,90 +142,90 @@
 
       let resultText = "";
 
-      resultText += `<p><strong>🎨 Favorite Color:</strong> `;
+      resultText += `<p><strong>🎨 Color Favorito:</strong> `;
       switch (color) {
         case "red":
-          resultText += `You’re vibrant and energetic...`;
+          resultText += `Eres vibrante y lleno de energía...`;
           break;
         case "blue":
-          resultText += `You’re calm and introspective...`;
+          resultText += `Eres calmado e introspectivo...`;
           break;
         case "green":
-          resultText += `You’re grounded and compassionate...`;
+          resultText += `Eres equilibrado y compasivo...`;
           break;
         case "yellow":
-          resultText += `You’re joyful and curious...`;
+          resultText += `Eres alegre y curioso...`;
           break;
         default:
-          resultText += `You’re imaginative and unique...`;
+          resultText += `Eres imaginativo y único...`;
       }
       resultText += `</p>`;
 
-      resultText += `<p><strong>🍽 Favorite Food:</strong> Loving ${food} shows your appreciation for life’s flavors and moments.</p>`;
+      resultText += `<p><strong>🍽 Comida Favorita:</strong> Amar el ${food} muestra tu aprecio por los sabores y momentos de la vida.</p>`;
 
-      resultText += `<p><strong>💃 Dance Style:</strong> `;
+      resultText += `<p><strong>💃 Estilo de Baile:</strong> `;
       switch (dance) {
         case "salsa":
-          resultText += `You're confident and love connection...`;
+          resultText += `Eres seguro y valoras la conexión...`;
           break;
         case "waltz":
-          resultText += `You appreciate grace and structure...`;
+          resultText += `Aprecias la elegancia y la estructura...`;
           break;
         case "floss":
-          resultText += `You're playful and trend-aware...`;
+          resultText += `Eres juguetón y sigues las tendencias...`;
           break;
         default:
-          resultText += `You're expressive and free...`;
+          resultText += `Eres expresivo y libre...`;
       }
       resultText += `</p>`;
 
-      resultText += `<p><strong>🧭 Adventure Level:</strong> `;
+      resultText += `<p><strong>🧭 Nivel de Aventura:</strong> `;
       if (adventure > 7) {
-        resultText += `You're a bold explorer...`;
+        resultText += `Eres un explorador audaz...`;
       } else if (adventure > 4) {
-        resultText += `You enjoy balance and spontaneous fun...`;
+        resultText += `Disfrutas del equilibrio y la diversión espontánea...`;
       } else {
-        resultText += `You cherish comfort and stability...`;
+        resultText += `Aprecias la comodidad y la estabilidad...`;
       }
       resultText += `</p>`;
 
-      resultText += `<p><strong>🔮 Zodiac Sign:</strong> As a <strong>${zodiac}</strong>, you are...`;
+      resultText += `<p><strong>🔮 Signo Zodiacal:</strong> Como <strong>${zodiac}</strong>, eres...`;
       switch (zodiac) {
         case "Aries":
-          resultText += ` bold and a go-getter.`;
+          resultText += ` valiente y ambicioso.`;
           break;
         case "Taurus":
-          resultText += ` steady and reliable.`;
+          resultText += ` estable y confiable.`;
           break;
         case "Gemini":
-          resultText += ` witty and curious.`;
+          resultText += ` ingenioso y curioso.`;
           break;
         case "Cancer":
-          resultText += ` intuitive and nurturing.`;
+          resultText += ` intuitivo y protector.`;
           break;
         case "Leo":
-          resultText += ` confident and creative.`;
+          resultText += ` confiado y creativo.`;
           break;
         case "Virgo":
-          resultText += ` practical and thoughtful.`;
+          resultText += ` práctico y considerado.`;
           break;
         case "Libra":
-          resultText += ` fair-minded and diplomatic.`;
+          resultText += ` justo y diplomático.`;
           break;
         case "Scorpio":
-          resultText += ` passionate and deep.`;
+          resultText += ` apasionado y profundo.`;
           break;
         case "Sagittarius":
-          resultText += ` adventurous and free-spirited.`;
+          resultText += ` aventurero y libre.`;
           break;
         case "Capricorn":
-          resultText += ` disciplined and ambitious.`;
+          resultText += ` disciplinado y ambicioso.`;
           break;
         case "Aquarius":
-          resultText += ` innovative and unique.`;
+          resultText += ` innovador y único.`;
           break;
         default:
-          resultText += ` compassionate and artistic.`;
+          resultText += ` compasivo y artístico.`;
       }
       resultText += `</p>`;
 
